@@ -1,0 +1,26 @@
+{
+  "name": "generative-ai-with-node",
+  "version": "1.0.0",
+  "description": "Generative AI - Node JS - Tutorial",
+  "homepage": "https://github.com/Arsalan-Ahmed-Solangi/generative-ai-with-node-js#readme",
+  "bugs": {
+    "url": "https://github.com/Arsalan-Ahmed-Solangi/generative-ai-with-node-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arsalan-Ahmed-Solangi/generative-ai-with-node-js.git"
+  },
+  "license": "ISC",
+  "author": "Arsalan Ahmed",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "nodemon": "^3.1.14"
+  }
+}
