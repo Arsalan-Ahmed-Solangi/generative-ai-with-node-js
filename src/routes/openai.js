@@ -40,4 +40,62 @@ router.get("/chat", async (req, res) => {
   });
 });
 
+router.post("/chatting", async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message) {
+      throw new Error(`Message is required!`);
+    }
+
+    const response = await openAIClient.responses.create({
+      model: "gpt-5.5",
+      instructions:
+        "You are an ai asistant so please use words natural and soft",
+      input: message,
+    });
+
+    console.log("RESPONSE", response);
+
+    return res.status(200).json({
+      message: response.output_text,
+    });
+  } catch (err) {
+    console.log("ERROR", err.message);
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+});
+
+router.post("/chatting-history", async (req, res) => {
+  try {
+    const { message, response_id } = req.body;
+
+    if (!message) {
+      throw new Error(`Message is required!`);
+    }
+
+    const response = await openAIClient.responses.create({
+      model: "gpt-5.5",
+      instructions:
+        "You are an ai asistant so please use words natural and soft",
+      input: message,
+      ...(response_id && { previous_response_id: response_id }),
+    });
+
+    console.log("RESPONSE", response);
+
+    return res.status(200).json({
+      message: response.output_text,
+      response_id: response.id,
+    });
+  } catch (err) {
+    console.log("ERROR", err.message);
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+});
+
 export default router;
