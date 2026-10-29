@@ -5,6 +5,7 @@ const router = express.Router();
 import { fileURLToPath } from "url";
 import path from "path";
 import { mkdir, writeFile } from "fs/promises";
+import { createReadStream } from "fs";
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -210,6 +211,55 @@ router.get("/analyze-image", async (req, res) => {
   return res.status(200).json({
     message: response.output_text,
   });
+});
+
+router.get("/generate-audio", async (req, res) => {
+  try {
+    const response = await openAIClient.audio.speech.create({
+      model: "gpt-4o-mini-tts",
+      voice: "cedar",
+      input:
+        "Hello, how's your generative ai node js course is going, and what so far you have learned?",
+      response_format: "mp3",
+    });
+
+    console.log("RESPONSE", response);
+
+    const audioDirectory = path.join(process.cwd(), "uploads", "audio");
+    mkdir(audioDirectory, { recursive: true });
+    const fileName = `speech2.mp3`;
+    const filepath = path.join(audioDirectory, fileName);
+
+    writeFile(filepath, Buffer.from(await response.arrayBuffer()));
+
+    return res.status(200).json({
+      message: " Audio voice generated successfully!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+});
+
+router.get("/audio-to-text", async (req, res) => {
+  try {
+    const response = await openAIClient.audio.transcriptions.create({
+      file: createReadStream("uploads/audio/speech.mp3"),
+      model: "gpt-transcribe",
+    });
+
+    console.log("RESPONSE", response);
+
+    return res.status(200).json({
+      text: response.text,
+      message: "Audio to text generated successfully!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
 });
 
 export default router;
